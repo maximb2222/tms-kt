@@ -1,0 +1,40 @@
+@model TaskManagementSystem.Web.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Task Details";
+}
+
+<h1 class="h3 mb-3">Task details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Id</dt>
+            <dd class="col-sm-9"><code>@Model.Id</code></dd>
+
+            <dt class="col-sm-3">Name</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">@Model.Status.ToDisplayName()</dd>
+
+            <dt class="col-sm-3">Assignee</dt>
+            <dd class="col-sm-9">@(Model.Assignee ?? "-")</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+
+            <dt class="col-sm-3">Updated</dt>
+            <dd class="col-sm-9">@Model.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3 d-flex gap-2">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+</div>

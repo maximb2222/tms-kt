@@ -1,0 +1,114 @@
+@model TaskManagementSystem.Web.ViewModels.TaskListViewModel
+
+@{
+    ViewData["Title"] = "Task Management";
+    var paged = Model.PagedTasks;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Task Management</h1>
+    <a asp-action="Create" class="btn btn-primary">Create task</a>
+</div>
+
+@if (TempData["Success"] is string successMessage)
+{
+    <div class="alert alert-success" role="alert">@successMessage</div>
+}
+
+<form method="get" class="row g-2 align-items-end mb-4">
+    <div class="col-sm-6 col-md-5">
+        <label for="searchTerm" class="form-label">Search</label>
+        <input id="searchTerm" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Name, description, assignee" />
+    </div>
+    <div class="col-sm-4 col-md-3">
+        <label for="status" class="form-label">Status</label>
+        <select id="status" name="status" class="form-select">
+            <option value="">All statuses</option>
+            @foreach (var status in Model.Statuses)
+            {
+                if (Model.Status == status)
+                {
+                    <option value="@status" selected>@status.ToDisplayName()</option>
+                }
+                else
+                {
+                    <option value="@status">@status.ToDisplayName()</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-sm-2 col-md-2">
+        <button type="submit" class="btn btn-outline-secondary w-100">Apply</button>
+    </div>
+    <div class="col-sm-12 col-md-2">
+        <a asp-action="Index" class="btn btn-link text-decoration-none">Reset</a>
+    </div>
+</form>
+
+@if (paged.Items.Count == 0)
+{
+    <div class="alert alert-info" role="alert">
+        No tasks found for selected filters.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Assignee</th>
+                    <th>Updated</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in paged.Items)
+                {
+                    <tr>
+                        <td>
+                            <strong>@item.Name</strong>
+                            <div class="small text-muted">@item.Description</div>
+                        </td>
+                        <td>@item.Status.ToDisplayName()</td>
+                        <td>@(item.Assignee ?? "-")</td>
+                        <td>@item.UpdatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Task list pagination">
+        <ul class="pagination">
+            <li class="page-item @(paged.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-searchTerm="@Model.SearchTerm"
+                   asp-route-status="@Model.Status"
+                   asp-route-page="@(paged.PageNumber - 1)">
+                    Previous
+                </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Page @(paged.PageNumber) of @(paged.TotalPages)</span>
+            </li>
+            <li class="page-item @(paged.HasNextPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-searchTerm="@Model.SearchTerm"
+                   asp-route-status="@Model.Status"
+                   asp-route-page="@(paged.PageNumber + 1)">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+}

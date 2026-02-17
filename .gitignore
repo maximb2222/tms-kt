@@ -1,0 +1,24 @@
+# Build artifacts
+bin/
+obj/
+
+# Test artifacts
+TestResults/
+coverage*.xml
+*.trx
+
+# Runtime data
+*.db
+*.db-shm
+*.db-wal
+logs/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# OS
+Thumbs.db
+.DS_Store
