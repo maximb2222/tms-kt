@@ -1,49 +1,35 @@
 # Task Management System
 
-Training project for CRUD development on .NET.
+Практическая работа по .NET: автономное CRUD-приложение с БД, тестами и документацией.
 
-## Stack
+## Что в репозитории
 
-- ASP.NET Core MVC (.NET 9)
-- Entity Framework Core + SQLite
-- Serilog (console + rolling file logs)
-- xUnit + EF Core InMemory for tests
+- `src/TaskManagementSystem.Web` - веб-приложение ASP.NET Core MVC
+- `tests/TaskManagementSystem.Tests` - автотесты
+- `docs/` - материалы КТ1-КТ4
 
-## Features
+## Функции приложения
 
-- Full CRUD for `TaskItem`
-- Search and filter by status
-- Pagination
-- Data validation (length limits and required fields)
-- Persistent storage in SQLite
-- Structured logging in `logs/`
+- CRUD для сущности `TaskItem`
+- Поиск и фильтрация по статусу
+- Пагинация списка
+- Логирование и хранение данных в SQLite
 
-## Domain Model
-
-`TaskItem` fields:
-
-- `Id` (`Guid`)
-- `Name` (3-50 chars)
-- `Description` (up to 255 chars)
-- `Status` (`New`, `InProgress`, `Completed`)
-- `Assignee` (optional, up to 50 chars)
-- `CreatedAt`
-- `UpdatedAt`
-
-## Run
+## Как запустить
 
 ```bash
 dotnet restore
 dotnet run --project src/TaskManagementSystem.Web
 ```
 
-## Test
+## Как проверить тесты
 
 ```bash
 dotnet test
-dotnet test --collect:"XPlat Code Coverage"
 ```
 
-## Documentation
+## Документы для сдачи
 
-See the `docs/` directory for KT1-KT4 materials.
+- `docs/KT1-Plan.pdf`
+- `docs/KT3-FinalDocumentation.pdf`
+- `docs/KT4-Presentation-Material.pptx`
