@@ -33,3 +33,9 @@ dotnet test
 - `docs/KT1-Plan.pdf`
 - `docs/KT3-FinalDocumentation.pdf`
 - `docs/KT4-Presentation-Material.pptx`
+
+## Postman (новое задание)
+
+- Коллекция: `postman/Book-CRUD.postman_collection.json`
+- Окружение: `postman/Book-CRUD-Local.postman_environment.json`
+- Инструкция: `docs/Postman-Assignment.md`

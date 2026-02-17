@@ -1,0 +1,206 @@
+{
+  "info": {
+    "_postman_id": "33df826d-91c3-4f0d-980d-421b12a292c6",
+    "name": "Book CRUD Assignment",
+    "description": "Collection for CRUD testing with pre-request script, response time checks and reusable variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Book",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const randomSuffix = Math.floor(Math.random() * 1000000);",
+              "const randomTitle = `Book ${randomSuffix}`;",
+              "pm.environment.set('bookTitle', randomTitle);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Created book has expected fields', function () {",
+              "    pm.expect(json.id).to.be.a('number');",
+              "    pm.expect(json.title).to.eql(pm.environment.get('bookTitle'));",
+              "    pm.expect(json.userId).to.eql(Number(pm.environment.get('userId')));",
+              "});",
+              "",
+              "pm.environment.set('bookId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"{{bookTitle}}\",\n  \"author\": \"Postman Student\",\n  \"userId\": {{userId}}\n}"
+        },
+        "url": "{{baseUrl}}/api/books"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get Book By Id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Returned id equals saved bookId', function () {",
+              "    pm.expect(json.id).to.eql(Number(pm.environment.get('bookId')));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/books/{{bookId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Update Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Title has been updated', function () {",
+              "    pm.expect(json.title).to.eql(`Updated ${pm.environment.get('bookTitle')}`);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated {{bookTitle}}\",\n  \"author\": \"Postman Student\",\n  \"userId\": {{userId}}\n}"
+        },
+        "url": "{{baseUrl}}/api/books/{{bookId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Get Books By userId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Response is array and includes created book', function () {",
+              "    pm.expect(Array.isArray(json)).to.eql(true);",
+              "    const found = json.some(item => item.id === Number(pm.environment.get('bookId')));",
+              "    pm.expect(found).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/books?userId={{userId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Delete Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test('Response body is empty', function () {",
+              "    pm.expect(pm.response.text()).to.eql('');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/books/{{bookId}}"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:5180",
+      "type": "string"
+    }
+  ]
+}
